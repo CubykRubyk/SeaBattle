@@ -1,0 +1,4 @@
+#ifndef CORABIEMENU_H
+#define CORABIEMENU_H
+
+#endif // CORABIEMENU_H
