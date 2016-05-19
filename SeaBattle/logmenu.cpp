@@ -1,7 +1,7 @@
 #include "logmenu.h"
 #include "QPalette"
 
-LogMenu::LogMenu(GAME_STATUS *_status, Statistica *_statLuipta, QWidget *parent) : QWidget(parent)
+LogMenu::LogMenu(GAME_STATUS *_status, Statistica *_statLupta, QWidget *parent) : QWidget(parent)
 {   gstatus=_status; //atribuim pointer la variabila statusul jocului din MainWindow
     statLupta=_statLupta; //atribuim pointer la obiectul clasei Statistica din MainWindow
 
@@ -11,8 +11,8 @@ LogMenu::LogMenu(GAME_STATUS *_status, Statistica *_statLuipta, QWidget *parent)
     QLabel *logLabel=new QLabel(tr("Game Log:"));
     layout->addWidget(logLabel);
     layout->addWidget(logText);
-    statusLabel=new Qlabel();
-    layout->addWidget(statusLab);
+    statusLabel=new QLabel();
+    layout->addWidget(statusLabel);
     enemyCorabiiGB=new QGroupBox(tr("Enemy Ships:"));
     QVBoxLayout *eShipsGBLayout=new QVBoxLayout();
     enemyCorabiiLabel=new QLabel();

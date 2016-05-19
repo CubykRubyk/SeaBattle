@@ -3,7 +3,7 @@
 #include <QBrush>
 #include <QRect>
 
-Corabie::Corabie(QPoint _drawPoint, int size, direction _dir, QList<Corabie *>* _corabii)
+Corabie::Corabie(QPoint _drawPoint, int _size, direction _dir, QList<Corabie *>* _corabii)
 {
     drawPoint = _drawPoint; //punctul
     size = _size;           //dimensiune
@@ -71,7 +71,7 @@ bool Corabie::peCorabie(QPoint p)
 //instalarea activitatii corabiei
 void Corabie::yesActiv(bool a)
 {
-    activ.a;
+    activ=a;
 }
 
 // mutarea corabiei la deltax si deltay
@@ -233,7 +233,6 @@ bool Corabie::verifica_conflict()
     bool res = false; // rezultatul, setam initial ca conflictul nu este
     QRect acestPatrat,candidatPatrat;
     int x, y;
-    int x1, x2, y1, y2;
     int up,bottom, rigth, left;
     left = CIMP_OFFSET + ((drawPoint.x() - CIMP_OFFSET) / CELULA) * CELULA;
     rigth = CIMP_OFFSET + ((drawPoint.x() - CIMP_OFFSET) / CELULA) * CELULA + CELULA;
