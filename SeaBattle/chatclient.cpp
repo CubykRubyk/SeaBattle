@@ -60,6 +60,15 @@ ChatClient::ChatClient(QWidget *parent, Qt::WindowFlags flags)
     socket = new QTcpSocket(this);
     buffer->open(QIODevice::ReadWrite);
 
+    connect(message,SIGNAL(returnPressed()),SLOT(sendMessage()));
+    connect(send,SIGNAL(clicked()),SLOT(sendMessage()));
+    connect(conn,SIGNAL(clicked()),SLOT(toggleConnection()));
+    connect(socket,SIGNAL(connected()),SLOT(setConnected()));
+    connect(socket,SIGNAL(disconnected()),SLOT(setDisconnected()));
+    connect(socket,SIGNAL(readyRead()),SLOT(receiveMessage()));
+
+    toggleConnection();
+
    
 
 }
