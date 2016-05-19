@@ -598,14 +598,71 @@ void CimpLupta::setModLupta(bool mode)
 
 void CimpLupta::verificaMiscare(int x, int y)
        {
+CELL_STATUS st = DOT; // initial celula e goala
+           Corabie* distrus = NULL;
+           // parcurgem lista si verificam daca oponentul nu a numerit in celula cu corabie
+           for(int i = 0; i < corabii.size() ; i++)
+           {
+               Corabie* cur = corabii.at(i);
+               if(cur->peCorabie(QPoint(CIMP_OFFSET + x * CELULA + CELULA / 2, CIMP_OFFSET + y * CELULA + CELULA / 2))) // verificare
+               {
 
+                   //daca in celula este corabie-il deterioram
+                   //daca damageCorabie introarce true,atunci corabia e distrusa
+                   if(cur->damageCorabie())
+                   {
+                       distrus = cur;
+                       st = KILLED;
+                       statLupta->corabieDistrusa(ME, distrus->dimensiunea()); // modificam statistica
+                       puncteCorabieDistrusa(distrus->pozitia(), distrus->dimensiunea(), distrus->directie()); // desenam punctele imprejur
+                   }
+                   else // corabia ranita
+                   {
+                       st = DAMAGED;
+                   }
+                   break;
+               }
+           }
+           cimp[y][x] = st; // statutul celulei in care a mers oponentul
+           if(st == DOT) // daca gafa - rindul meu
+               *gstatus = YOUR_TURN;
+
+           //trimitem raspuns la miscare oponentului
+           //semnalul dat va fi analizat de slotul MainWindow::sendTurnResponse (x,y)
+           //care prin protocolul TCP va trimite rezultatul miscarii la aplicatia oponentului
+           emit miscareRaspuns(x, y, st, distrus);
+           emit updateStatusLabel(); // update
+           statLupta->verificaStatus(); // verificam daca nu a invins cineva
+           if(st == KILLED || st == DAMAGED)
+               QSound::play(":/sound/Sounds/boom.wav"); // sunet-lovit
+           else
+               QSound::play(":/sound/Sounds/splash-01.wav"); // sunet stropi
+           update();
        }
            
 
 
 void CimpLupta::verificaMiscareRaspuns(int x, int y, CELL_STATUS st, QPoint pos, int size, direction dir)
        {
-           
+            cimp[y][x] = st; // setam starea celulei pentru care a fost primit raspuns
+           clicked = false;
+           if(st == KILLED) // corabia oponetului-distrusa
+           {
+               // adaugam corabia distrusa
+               Corabie* cur = new Corabie(QPoint(pos.x(), pos.y()), size, dir, &corabii);
+               corabii.append(cur);
+               puncteCorabieDistrusa(cur->pozitia(), cur->dimensiunea(), cur->directie()); // puncte imprejur
+               statLupta->corabieDistrusa(ENEMY, size); // update statistica
+           }
+           if(st == DOT) // daca gafa-miscarea oponetului
+               *gstatus = ENEMY_TURN;
+           emit updateStatusLabel(); // update
+           statLupta->verificaStatus(); // verificam daca nu a cistigat cineva
+           if(st == KILLED || st == DAMAGED)
+               QSound::play(":/sounds/Sounds/boom.wav"); // sunet lovit
+           else
+               QSound::play(":/sounds/Sounds/splash-01.wav"); // sunet stropi
+           update(); //
        }
 
 
