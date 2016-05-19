@@ -41,7 +41,59 @@ CimpLupta::CimpLupta(GAME_STATUS *_gstatus, Statistica *_statLupta, QWidget *par
 
 void CimpLupta::paintEvent(QPaintEvent *event)
 {
-  
+   QPainter desen(this);
+    QPen creion; // pt conturul obiectelor
+    creion.setColor(Qt::darkCyan);
+    creion.setWidth(3);
+    desen.setPen(creion);
+    //desenam conturul cimpului
+    desen.drawRect(CIMP_OFFSET,CIMP_OFFSET,mar_cimp-2*CIMP_OFFSET,mar_cimp-2*CIMP_OFFSET);//patratul principal
+    //grid-ul
+    for(int i=CIMP_OFFSET+CELULA; i <= (mar_cimp-CIMP_OFFSET-CELULA); i+=CELULA)
+        desen.drawLine(CIMP_OFFSET,i,mar_cimp-CIMP_OFFSET,i); //liniile verticale
+     for(int i=CIMP_OFFSET+CELULA; i <= (mar_cimp-CIMP_OFFSET-CELULA); i+=CELULA)
+         desen.drawLine(i,CIMP_OFFSET,i,mar_cimp-CIMP_OFFSET); //liniile orizontale
+     QFont font;
+     font.setPixelSize(15);
+     desen.setFont(font);
+     creion.setColor(Qt::black);
+     creion.setWidth(2);
+     desen.setPen(creion);
+     for(int i = 0; i<10;i++)
+         desen.drawText(0,CIMP_OFFSET+i*CELULA+18,QString::number(i+1)); //desenam cifrele
+
+     for(int i = 0; i<10;i++)
+         desen.drawText(CIMP_OFFSET+i*CELULA+8,CIMP_OFFSET-5,QString(abc[i])); //desenam literele
+     //mai intii desenam toate corabiile inafara de cel activ,pentru ca la deplasarea,
+     //sau la conflict,corabia sa se deseneze deasupra la restu
+     for(int i = 0; i < corabii.size(); i++)
+         if(corabii.at(i) != corabieActiva)
+             corabii.at(i)->desenam(&desen);
+     //desenm corabia activa sau care conflict
+     if(corabieConflict)
+         corabieConflict->desenam(&desen);
+     else
+         if(corabieActiva)
+             corabieActiva->desenam(&desen);
+     //desenam statuturile celulelor deasupra la tot
+     for(int i = 0; i < 10; i++)
+     {
+         for(int j = 0; j < 10; j++)
+         {
+             switch(cimp[i][j])
+             {
+             case EMPTY:
+                 break;
+             case KILLED:
+             case DAMAGED:
+                 deseneazaRanit(&desen,j,i);
+                 break;
+             case DOT:
+                 deseneazaPunct(&desen,j,i);
+                 break;
+             }
+         }
+     }
 }
 
 void CimpLupta::deseneazaPunct(QPainter *desen, int x, int y)
