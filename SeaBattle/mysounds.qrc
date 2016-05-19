@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/sound">
+        <file>Sounds/boom.wav</file>
+        <file>Sounds/nave.wav</file>
+        <file>Sounds/sdwin.wav</file>
+        <file>Sounds/splash.wav</file>
+        <file>Sounds/splash-01.wav</file>
+    </qresource>
+</RCC>
