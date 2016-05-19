@@ -9,25 +9,26 @@
 
 //clasa meniului jocului
 
-class GameMenu: public QWidget
+class GameMenu : public QWidget
+{
+    Q_OBJECT
 
-{    Q_OBJECT
+private:
+    QPushButton *createGame; //butonul "New Game"
+    QPushButton *connectToGame; //butonul "Connect"
 
-    private:
-       QPushButton *createGame;  //butonul "NewGame"
-       QPushButton *connectToGame; //butonul "connect"
+    QLabel      *gameLabel;
 
-       QLabel      *gameLabel;
+public:
+    explicit GameMenu(QWidget *parent = 0);
 
-    public:
-       explicit GameMenu(QWidget *parent=0);
 
-    signals:
-       void creatGameClicked(); //semnalul butonului "New Game"
-       void connectToGameClicked(); //semnalul butonului "Connect"
+signals:
+    void createGameClicked(); //semnalul butonului "New Game"
+    void connectToGameClicked(); //semnalul butonului "Connect"
 
-    public slots:
 
+public slots:
 };
 
 #endif // GAMEMENU_H
