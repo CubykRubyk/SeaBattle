@@ -349,17 +349,78 @@ void CimpLupta::mouseReleaseEvent(QMouseEvent *event)
 
 void CimpLupta::rotatieCorabieActiva()
        {
+         // daca este corabie activa,o rotim
+           if(corabieActiva)
+               corabieActiva->roteste();
+           // verificam conflict
+           if(corabieActiva->verifica_conflict())
+           {
+
+              corabieConflict = corabieActiva;
+              corabieConflict->yesConflict(true);
+              emit corabieConflicta(true);
+           }
+           else
+           {
+               if(corabieConflict)
+                  corabieConflict->yesConflict(false);
+              corabieConflict = NULL;
+                  emit corabieConflicta(false);
+           }
+           update();
+       }
            
 
 void CimpLupta::adaugaCorabiePeCimp(int size)
        {
+//corabia noua se amplaseaza vetical,incepind cu virful stinga-sus al cimpului
+           Corabie* cur = new Corabie(QPoint(CIMP_OFFSET, CIMP_OFFSET), size, VERTICAL, &corabii);
+           corabii.append(cur); // adaugam o corabie noua in lista
+           // verificam conflict
+           if(cur->verifica_conflict())
+           {
+              corabieConflict = cur;
+              corabieConflict->yesConflict(true);
+              emit corabieConflicta(true);
+           }
+           else
+           {
+               if(corabieConflict)
+                  corabieConflict->yesConflict(false);
+              corabieConflict = NULL;
+                  emit corabieConflicta(false);
+           }
 
+           if(corabieActiva)
+               corabieActiva->yesActiv(false);
+           // setam ca activa corabia adaugata
+           corabieActiva = cur;
+           corabieActiva->yesActiv(true);
+           emit corabieActivata(true, corabieActiva->dimensiunea());
+           update();
     
        }
 
 
 void CimpLupta::elimineCorabieCimp()
        {
+         //parcurgem lista si gasim corabia activa
+           for(int i = 0 ; i < corabii.size() ; i++)
+               if(corabii.at(i) == corabieActiva) // verificare
+               {
+                   corabii.removeAt(i); // stergem din lista
+                   if(corabieActiva == corabieConflict) // daca eliminam corabie conflict,anuntam d
+                   {
+                      corabieConflict = NULL;
+                       emit corabieConflicta(false);
+                   }
+                   delete corabieActiva; // stergem
+                   corabieActiva = NULL;
+                   emit corabieActivata(false, -1);
+                   break;
+               }
+           update();
+       }
            
 
 
@@ -388,12 +449,14 @@ void CimpLupta::setModLupta(bool mode)
 
 void CimpLupta::verificaMiscare(int x, int y)
        {
+
+       }
            
 
 
 void CimpLupta::verificaMiscareRaspuns(int x, int y, CELL_STATUS st, QPoint pos, int size, direction dir)
        {
-           /
+           
        }
 
 
