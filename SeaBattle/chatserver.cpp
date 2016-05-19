@@ -28,7 +28,7 @@ void ChatServer::removeConnection()
     QBuffer* buffer = buffers.take(socket);
     buffer->close();
     buffer->deleteLater();
-    connections.remove(socket);
+    connections.removeAll(socket);
     socket->deleteLater();
 }
 
