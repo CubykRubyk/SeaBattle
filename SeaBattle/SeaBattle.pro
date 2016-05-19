@@ -5,6 +5,9 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
+QT       += multimedia
+QT       += gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -35,3 +38,6 @@ HEADERS  += mainwindow.h \
     statistica.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    mysounds.qrc
