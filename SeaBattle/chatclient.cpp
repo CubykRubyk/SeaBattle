@@ -75,31 +75,68 @@ ChatClient::ChatClient(QWidget *parent, Qt::WindowFlags flags)
 
 ChatClient::~ChatClient()
 {
+    buffer->close();
     
 }
 
 void ChatClient::setConnected()
 {
-   
+    port->setEnabled(false);
+    server->setEnabled(false);
+    nick->setEnabled(true);
+    message->setEnabled(true);
+    chat->setEnabled(true);
+    chat->clear();
+    send->setEnabled(true);
+    conn->setText("Disconnect");
 }
 
 void ChatClient::setDisconnected()
 {
-    
+    port->setEnabled(true);
+    server->setEnabled(true);
+    nick->setEnabled(false);
+    message->setEnabled(false);
+    chat->setEnabled(false);
+    send->setEnabled(false);
+    conn->setText("Connect");
 }
 
 void ChatClient::toggleConnection()
 {
-    
+     if (socket->state() == QAbstractSocket::UnconnectedState)
+    {
+        socket->connectToHost(server->text(), port->value());
+    }
+    else
+    {
+        socket->disconnectFromHost();
+    }
 }
 
 void ChatClient::sendMessage()
 {
-    
+      // "<nick> message\n"
+ if(ans = true)
+      socket->write( "<font color=\"Red\">"+  nick->text().toLatin1() + ": "+"</font>" + message->text().toLatin1() + "\n");
+   else
+    if(ans = false)
+       socket->write( "<font color=\"Aqua\">"+  nick->text().toLatin1() + ": "+"</font>" + message->text().toLatin1() + "\n");
+
+    message->clear();
 }
 
 void ChatClient::receiveMessage()
 {
-   
+    // missing some checks for returns values for the sake of simplicity
+    qint64 bytes = buffer->write(socket->readAll());
+    // go back as many bytes as we just wrote so that it can be read
+    buffer->seek(buffer->pos() - bytes);
+    // read only full lines, line by line
+    while (buffer->canReadLine())
+    {
+        QString line = buffer->readLine();
+        chat->append(line.simplified());
+    }
 }
 
