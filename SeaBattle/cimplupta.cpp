@@ -426,24 +426,173 @@ void CimpLupta::elimineCorabieCimp()
 
 void CimpLupta::reset()
        {
+         corabieActiva = NULL;
+          corabieConflict = NULL;
+           modAmplasare = false;
+           miscCorabie = false;
+           // curatim lista de corabii
+           while(corabii.size() != 0)
+           {
+               Corabie* cur = corabii.first();
+               corabii.pop_front();
+               delete cur;
+           }
        }
 
 
 void CimpLupta::genereazaRandom()
        {
-           
+           reset();
+           modAmplasare = true;
+           srand(time(NULL)); // initializam generatorul
+           direction dir; // orientarea
+           Corabie* cur; // pointer la corabia pe care incercam sa o plasam pe cimp
+           // pt coordonate2
+           int xmod, ymod;
+           int x, y;
+
+           // plasam corabiile de o celula
+           for( int i = 0 ; i < CORABIE1_AMOUNT ; i++)
+           {
+              //alegem pozitia pt corabie pina cind nu o sa apara conflict cu corabiile deja plasate
+               do
+               {
+                   // orientarea
+                   if(rand() % 2 == 0)
+                       dir = VERTICAL;
+                   else
+                       dir = ORIZONTAL;
+                   // alegem celula
+                   switch(dir)
+                   {
+                   case VERTICAL:
+                       xmod = 10;
+                       ymod = 10 - CORABIE1 + 1;
+                       break;
+                   case ORIZONTAL:
+                       ymod = 10;
+                       xmod = 10 - CORABIE1 + 1;
+                       break;
+                   }
+                   // recalculam numarul celulei in coordonate
+                   x = (rand() % xmod) * CELULA;
+                   y = (rand() % ymod) * CELULA;
+                   cur = new Corabie(QPoint(CIMP_OFFSET + x, CIMP_OFFSET + y), CORABIE1, dir, &corabii);
+               }
+               while(cur->verifica_conflict());// verificarea amplasarii
+               corabii.append(cur); // adaugare in lista
+           }
+
+           //de 2 celule
+
+           for( int i = 0 ; i < CORABIE2_AMOUNT ; i++)
+           {
+              //alegem pozitia pt corabie pina cind nu o sa apara conflict cu corabiile deja plasate
+               do
+               {
+                   // orientarea
+                   if(rand() % 2 == 0)
+                       dir = VERTICAL;
+                   else
+                       dir = ORIZONTAL;
+                   // alegem celula
+                   switch(dir)
+                   {
+                   case VERTICAL:
+                       xmod = 10;
+                       ymod = 10 - CORABIE2 + 1;
+                       break;
+                   case ORIZONTAL:
+                       ymod = 10;
+                       xmod = 10 - CORABIE2 + 1;
+                       break;
+                   }
+                   // recalculam numarul celulei in coordonate
+                   x = (rand() % xmod) * CELULA;
+                   y = (rand() % ymod) * CELULA;
+                   cur = new Corabie(QPoint(CIMP_OFFSET + x, CIMP_OFFSET + y), CORABIE2, dir, &corabii);
+               }
+               while(cur->verifica_conflict());// verificarea amplasarii
+               corabii.append(cur); // adaugare in lista
+           }
+
+           // plasam corabiile de 3 celule
+           for( int i = 0 ; i < CORABIE3_AMOUNT ; i++)
+           {
+              //alegem pozitia pt corabie pina cind nu o sa apara conflict cu corabiile deja plasate
+               do
+               {
+                   // orientarea
+                   if(rand() % 2 == 0)
+                       dir = VERTICAL;
+                   else
+                       dir = ORIZONTAL;
+                   // alegem celula
+                   switch(dir)
+                   {
+                   case VERTICAL:
+                       xmod = 10;
+                       ymod = 10 - CORABIE3 + 1;
+                       break;
+                   case ORIZONTAL:
+                       ymod = 10;
+                       xmod = 10 - CORABIE3 + 1;
+                       break;
+                   }
+                   // recalculam numarul celulei in coordonate
+                   x = (rand() % xmod) * CELULA;
+                   y = (rand() % ymod) * CELULA;
+                   cur = new Corabie(QPoint(CIMP_OFFSET + x, CIMP_OFFSET + y), CORABIE3, dir, &corabii);
+               }
+               while(cur->verifica_conflict());// verificarea amplasarii
+               corabii.append(cur); // adaugare in lista
+           }
+
+           // plasam corabiile de 4 celule
+           for( int i = 0 ; i < CORABIE4_AMOUNT ; i++)
+           {
+              //alegem pozitia pt corabie pina cind nu o sa apara conflict cu corabiile deja plasate
+               do
+               {
+                   // orientarea
+                   if(rand() % 2 == 0)
+                       dir = VERTICAL;
+                   else
+                       dir = ORIZONTAL;
+                   // alegem celula
+                   switch(dir)
+                   {
+                   case VERTICAL:
+                       xmod = 10;
+                       ymod = 10 - CORABIE4 + 1;
+                       break;
+                   case ORIZONTAL:
+                       ymod = 10;
+                       xmod = 10 - CORABIE4 + 1;
+                       break;
+                   }
+                   // recalculam numarul celulei in coordonate
+                   x = (rand() % xmod) * CELULA;
+                   y = (rand() % ymod) * CELULA;
+                   cur = new Corabie(QPoint(CIMP_OFFSET + x, CIMP_OFFSET + y), CORABIE4, dir, &corabii);
+               }
+               while(cur->verifica_conflict());// verificarea amplasarii
+               corabii.append(cur); // adaugare in lista
+           }
+
+           update();
        }
 
 
 void CimpLupta::setModAmplasare(bool mode)
        {
-         
+           modAmplasare = mode;
        }
 
 
 void CimpLupta::setModLupta(bool mode)
        {
-           
+           modLupta = mode;
        }
 
 
@@ -462,10 +611,52 @@ void CimpLupta::verificaMiscareRaspuns(int x, int y, CELL_STATUS st, QPoint pos,
 
 void CimpLupta::puncteCorabieDistrusa(QPoint pos, int size, direction dir)
        {
-           
+           int x1, x2, y1, y2;
+           // coordonatele celulelor care inconjoara corabiile
+           int x = (pos.x() - CIMP_OFFSET) / CELULA;
+           int y = (pos.y() - CIMP_OFFSET) / CELULA;
+           switch(dir)
+           {
+               case ORIZONTAL:
+               {
+                   x1 = x - 1 >= 0 ? x - 1 : 0;
+                   y1 = y - 1 >= 0 ? y - 1 : 0;
+                   x2 = x + size <= 9 ? x + size : 9;
+                   y2 = y + 1  <= 10 ? y + 1 : 9;
+                   break;
+               }
+               case VERTICAL:
+               {
+                   x1 = x - 1 >= 0 ? x - 1 : 0;
+                   y1 = y - 1 >= 0 ? y - 1 : 0;
+                   x2 = x + 1  <= 9 ? x + 1 : 9;
+                   y2 = y + size <= 9? y + size : 9;
+                   break;
+               }
+           }
+
+           // starea celulelor inconjuratoare
+           for(int i = x1 ; i <= x2 ; i++)
+               if(cimp[y1][i] == EMPTY)
+                   cimp[y1][i] = DOT;
+           for(int i = x1 ; i <= x2 ; i++)
+               if(cimp[y2][i] == EMPTY)
+                   cimp[y2][i] = DOT;
+           for(int i = y1 ; i <= y2 ; i++)
+               if(cimp[i][x1] == EMPTY)
+                   cimp[i][x1] = DOT;
+           for(int i = y1 ; i <= y2 ; i++)
+               if(cimp[i][x2] == EMPTY)
+                   cimp[i][x2] = DOT; 
        }
 
 
 void CimpLupta::corabieNeactiva()
-      
+{
+       if(corabieActiva)
+               corabieActiva->yesActiv(false);
+           corabieActiva = NULL;
+           if(corabieConflict)
+              corabieConflict->yesConflict(false);
+          corabieConflict = NULL;
        }
