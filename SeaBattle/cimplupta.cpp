@@ -98,12 +98,25 @@ void CimpLupta::paintEvent(QPaintEvent *event)
 
 void CimpLupta::deseneazaPunct(QPainter *desen, int x, int y)
 {
-   
+    QPen creion;
+    QBrush periuta;
+    creion.setColor(Qt::black);
+    desen->setPen(creion);
+    periuta.setStyle(Qt::SolidPattern);
+    periuta.setColor(Qt::black);
+    desen->setBrush(periuta);
+    desen->drawEllipse(QPoint(CIMP_OFFSET+x*CELULA+CELULA/2,CIMP_OFFSET+y*CELULA+CELULA/2),PUNCT,PUNCT); //desenam punctul
 }
 
 void CimpLupta::deseneazaRanit(QPainter *desen, int x, int y)
 {
- 
+    QPen creion;
+    creion.setColor(Qt::red);
+    creion.setWidth(2);
+    desen->setPen(creion);
+    //desenam un X din 2 linii
+    desen->drawLine(CIMP_OFFSET + x * CELULA, CIMP_OFFSET + y * CELULA, CIMP_OFFSET + (x + 1) * CELULA, CIMP_OFFSET + (y + 1) * CELULA);
+    desen->drawLine(CIMP_OFFSET + x * CELULA, CIMP_OFFSET + (y + 1) * CELULA, CIMP_OFFSET + (x + 1) * CELULA, CIMP_OFFSET + y  * CELULA);
 }
 
 void CimpLupta::mousePressEvent(QMouseEvent *event)
